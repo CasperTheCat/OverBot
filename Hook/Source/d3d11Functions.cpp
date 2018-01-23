@@ -63,10 +63,10 @@ HRESULT WINAPI D3D11CreateDevice(
 		d3dw->Event << LOG("Device Created") << std::endl;
 		d3dw->setDevice(*ppDevice);
 
-		ID3D11DeviceContext *tempCtx = new D3D11CustomContext(*ppImmediateContext);
+		ID3D11DeviceContext *tempCtx = new D3D11CustomContext(d3dw, *ppImmediateContext);
 		*ppImmediateContext = tempCtx;
 
-		ID3D11Device *temp = new D3D11CustomDevice(*ppDevice);
+		ID3D11Device *temp = new D3D11CustomDevice(d3dw, *ppDevice);
 		*ppDevice = temp;
 	} 
 	else

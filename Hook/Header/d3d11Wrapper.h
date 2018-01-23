@@ -22,20 +22,11 @@ protected:
 	ID3D11Device *m_device;
 	IDXGISwapChain* m_swapchain;
 	bool bIsDllValid;
-	std::string wsaPort;
-	struct addrinfo *res;
+	HookCommunications *hComms;
 
-	// Server Up?
-	bool bIsBound;
 
 public:
 	std::ofstream Event;
-
-	/**
-	 * Windows Socket Data
-	 */
-	WSADATA wsaData;
-
 
 protected:
 
@@ -51,13 +42,6 @@ public:
 	[[nodiscard]]
 	bool CreateSocketAndBind();
 
-	/**
-	 * Publish
-	 */
-	//[[nodiscard]]
-	int Publish();
-
-	
 	/// Public functions
 	bool LoadDLL();
 

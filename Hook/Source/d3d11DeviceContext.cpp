@@ -1,16 +1,16 @@
 #include "../Header/d3d11DeviceContext.h"
 
-D3D11CustomContext::D3D11CustomContext(D3D11Wrapper *wrapper, ID3D11DeviceContext* devCon, ID3D11DeviceContext*** ret)
+D3D11CustomContext::D3D11CustomContext(HookCommunications *net, ID3D11DeviceContext* devCon, ID3D11DeviceContext*** ret)
 {
 	m_devContext = devCon;
 	*ret = &m_devContext;
-	m_d3dWrapper = wrapper;
+	m_net = net;
 }
 
-D3D11CustomContext::D3D11CustomContext(D3D11Wrapper *wrapper, ID3D11DeviceContext* devCon)
+D3D11CustomContext::D3D11CustomContext(HookCommunications *net, ID3D11DeviceContext* devCon)
 {
 	m_devContext = devCon;
-	m_d3dWrapper = wrapper;
+	m_net = net;
 }
 
 void D3D11CustomContext::VSSetConstantBuffers(UINT StartSlot, UINT NumBuffers, ID3D11Buffer* const* ppConstantBuffers)
