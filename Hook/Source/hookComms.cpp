@@ -72,6 +72,10 @@ bool HookCommunications::CreateSocketAndBind()
 	return true;
 }
 
+//////////////////////////////////////////////////
+// Notifiers
+//
+
 void HookCommunications::Notify_DamageBoost()
 {
     // NOTHING
