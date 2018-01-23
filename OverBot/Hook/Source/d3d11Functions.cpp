@@ -1,8 +1,8 @@
-#include "stdafx.h"
-#include "d3d11Wrapper.h"
-#include "utils.h"
-#include "d3d11Device.h"
-#include "d3d11DeviceContext.h"
+
+#include "../Header/d3d11Wrapper.h"
+#include "../Header/utils.h"
+#include "../Header/d3d11Device.h"
+#include "../Header/d3d11DeviceContext.h"
 
 // Global Class
 D3D11Wrapper *d3dw = new D3D11Wrapper();

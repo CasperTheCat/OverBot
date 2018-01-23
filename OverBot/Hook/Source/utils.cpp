@@ -1,5 +1,7 @@
-#include "stdafx.h"
-#include "utils.h"
+#include "../Header/utils.h"
+#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+#include <windows.h>
+
 typedef BOOL(WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
 bool IsWow64()
 {

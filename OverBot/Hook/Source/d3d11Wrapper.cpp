@@ -1,6 +1,5 @@
-#include "stdafx.h"
-#include "d3d11Wrapper.h"
-#include "utils.h"
+#include "../Header/d3d11Wrapper.h"
+#include "../Header/utils.h"
 #include <iostream>
 
 
