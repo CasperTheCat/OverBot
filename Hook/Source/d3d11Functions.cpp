@@ -140,6 +140,13 @@ HRESULT WINAPI D3D11CreateDeviceAndSwapChain(
 	__out_opt D3D_FEATURE_LEVEL* pFeatureLevel,
 	__out_opt ID3D11DeviceContext** ppImmediateContext)
 {
+	// Returns the true if successful
+	//if(!d3dw->CreateSocketAndBind())
+	if(WAS_FAILURE(d3dw->CreateSocketAndBind()))
+	{
+		// Failure
+		return NULL;
+	}
 	MessageBox(NULL, L"Creating Device and SwapChain", L"D3D9Wrapper", MB_OK);
 	PFN_D3D11_CREATE_DEVICE_AND_SWAP_CHAIN createDev = (PFN_D3D11_CREATE_DEVICE_AND_SWAP_CHAIN)GetProcAddress(d3dw->getDLL(), "D3D11CreateDeviceAndSwapChain");
 	if (!createDev) return NULL;

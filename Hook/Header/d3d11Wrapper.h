@@ -46,10 +46,17 @@ public:
 	~D3D11Wrapper();
 
 	/**
-	 * Create Socket and Bind
+	 * Create Socket and Bind (NO DISCARD)
 	 */
 	[[nodiscard]]
 	bool CreateSocketAndBind();
+
+	/**
+	 * Publish
+	 */
+	//[[nodiscard]]
+	int Publish();
+
 	
 	/// Public functions
 	bool LoadDLL();
