@@ -1,15 +1,17 @@
 #include "../Header/d3d11Device.h"
 #include <iostream>
 
-D3D11CustomDevice::D3D11CustomDevice(ID3D11Device* dev, ID3D11Device*** ret)
+D3D11CustomDevice::D3D11CustomDevice(D3D11Wrapper *wrapper, ID3D11Device* dev, ID3D11Device*** ret)
 {
 	m_d3dDevice = dev;
 	*ret = &m_d3dDevice;
+	m_d3dWrapper = wrapper;
 }
 
-D3D11CustomDevice::D3D11CustomDevice(ID3D11Device* dev)
+D3D11CustomDevice::D3D11CustomDevice(D3D11Wrapper *wrapper, ID3D11Device* dev)
 {
     m_d3dDevice = dev;
+	m_d3dWrapper = wrapper;
 }
 
 HRESULT D3D11CustomDevice::CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Buffer** ppBuffer)

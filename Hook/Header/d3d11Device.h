@@ -11,13 +11,13 @@ class D3D11CustomDevice : public ID3D11Device
 {
 protected:
 	ID3D11Device *m_d3dDevice;
+	D3D11Wrapper *m_d3dWrapper;
 
 
 public:
 	virtual ~D3D11CustomDevice() = default;
-	D3D11CustomDevice(ID3D11Device *dev, ID3D11Device ***ret);
-    D3D11CustomDevice(ID3D11Device *dev);
-
+	D3D11CustomDevice(D3D11Wrapper *wrapper, ID3D11Device *dev, ID3D11Device ***ret);
+    D3D11CustomDevice(D3D11Wrapper *wrapper, ID3D11Device *dev);
 
 	HRESULT STDMETHODCALLTYPE CreateBuffer(
 		/* [annotation] */
