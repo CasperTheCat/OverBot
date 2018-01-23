@@ -73,6 +73,11 @@ HMODULE D3D11Wrapper::getDLL()
 
 }
 
+HookCommunications *D3D11Wrapper::GetHookComms()
+{
+	return hComms;
+}
+
 void D3D11Wrapper::setDevice(ID3D11Device* dev)
 {
 	m_device = dev;

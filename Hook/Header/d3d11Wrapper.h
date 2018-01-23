@@ -47,6 +47,7 @@ public:
 
 	// Getters
 	HMODULE getDLL();
+	HookCommunications *GetHookComms();
 
 	// Setters
 	void setDevice(ID3D11Device *dev);
