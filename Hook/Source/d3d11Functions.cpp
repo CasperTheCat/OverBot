@@ -30,7 +30,13 @@ HRESULT WINAPI D3D11CreateDevice(
 {
 	d3dw->Event << LOG("D3D11CreateDevice intercepted") << std::endl;
 
-	d3dw->CreateSocketAndBind();
+	// Returns the true if successful
+	//if(!d3dw->CreateSocketAndBind())
+	if(WAS_FAILURE(d3dw->CreateSocketAndBind()))
+	{
+		// Failure
+		return NULL;
+	}
 
 	PFN_D3D11_CREATE_DEVICE createDev = (PFN_D3D11_CREATE_DEVICE)GetProcAddress(d3dw->getDLL(), "D3D11CreateDevice");
 	if (createDev == nullptr)
