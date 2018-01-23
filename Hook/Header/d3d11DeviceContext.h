@@ -11,10 +11,11 @@ class D3D11CustomContext : public ID3D11DeviceContext
 {
 protected:
 	ID3D11DeviceContext *m_devContext;
+	D3D11Wrapper *m_d3dWrapper;
 
 public:
-	D3D11CustomContext(ID3D11DeviceContext *dev, ID3D11DeviceContext ***ret);
-	D3D11CustomContext(ID3D11DeviceContext *dev);
+	D3D11CustomContext(D3D11Wrapper *wrapper, ID3D11DeviceContext *dev, ID3D11DeviceContext ***ret);
+	D3D11CustomContext(D3D11Wrapper *wrapper, ID3D11DeviceContext *dev);
 
 
 	void STDMETHODCALLTYPE VSSetConstantBuffers(
