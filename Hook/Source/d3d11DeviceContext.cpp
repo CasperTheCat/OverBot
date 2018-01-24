@@ -85,6 +85,7 @@ void D3D11CustomContext::DrawIndexedInstanced(UINT IndexCountPerInstance, UINT I
 
 void D3D11CustomContext::DrawInstanced(UINT VertexCountPerInstance, UINT InstanceCount, UINT StartVertexLocation, UINT StartInstanceLocation)
 {
+	m_net->Signal_EndFrame(); // Erroneous TODO CHANGE
 	m_devContext->DrawInstanced(VertexCountPerInstance, InstanceCount, StartVertexLocation, StartInstanceLocation);
 }
 
@@ -120,6 +121,7 @@ void D3D11CustomContext::Begin(ID3D11Asynchronous* pAsync)
 
 void D3D11CustomContext::End(ID3D11Asynchronous* pAsync)
 {
+	//m_net->Signal_EndFrame();
 	m_devContext->End(pAsync);
 }
 

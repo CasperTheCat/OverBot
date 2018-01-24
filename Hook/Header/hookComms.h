@@ -159,7 +159,4 @@ public:
      */
     void Notify_HealthChanged(int newHealth);
 
-    
-
-    
 };

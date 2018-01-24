@@ -83,6 +83,7 @@ void HookCommunications::Signal_EndFrame()
 {
 	// Append Signal to Thread Queue
 	// Signal the network thread. It's able to send now.
+	MainRt_PushMessage(EQueueMessageType::Signal_EndFrame);
 }
 
 void HookCommunications::NetworkThreadRt()
@@ -123,7 +124,9 @@ void HookCommunications::NetworkThreadRt()
 		case EQueueMessageType::NetThreadStop: 
 			ThreadRun = false;
 			break;
-		case EQueueMessageType::Signal_EndFrame: break;
+		case EQueueMessageType::Signal_EndFrame:
+			ThreadRt_TransmitToClient(EQueueMessageType::Signal_EndFrame);
+			break;
 		case EQueueMessageType::Notify_DamageBoost: break;
 		case EQueueMessageType::Notify_Healing: break;
 		case EQueueMessageType::Notify_AntiHealing: break;
