@@ -9,7 +9,8 @@ HookCommunications::HookCommunications() :
     res(nullptr),
     bIsBound(false)
 {
-
+	// Launch Thread
+	netThread = new std::thread(&HookCommunications::NetworkThreadRT, this);
 }
 
 HookCommunications::~HookCommunications()
@@ -19,6 +20,8 @@ HookCommunications::~HookCommunications()
     // Delete the socket
 	closesocket(ServerSocket);
 	WSACleanup();
+
+	if(netThread->joinable()) netThread->join();
 }
 
 [[nodiscard]]
@@ -70,6 +73,18 @@ bool HookCommunications::CreateSocketAndBind()
 	bIsBound = true;
     freeaddrinfo(res);
 	return true;
+}
+
+void HookCommunications::Signal_EndFrame()
+{
+	// Append Signal to Thread Queue
+	// Signal the network thread. It's able to send now.
+}
+
+void HookCommunications::NetworkThreadRT()
+{
+	// Network Thread Logic
+	// This loops infinitely until we recieve a kill from the host
 }
 
 //////////////////////////////////////////////////
