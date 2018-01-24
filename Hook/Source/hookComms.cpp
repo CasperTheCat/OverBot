@@ -5,12 +5,11 @@
 //#include <ws2def.h>
 
 HookCommunications::HookCommunications() :
-    wsaPort("8008"),
-    res(nullptr),
+    WsaPort("8008"),
     bIsBound(false)
 {
 	// Launch Thread
-	netThread = new std::thread(&HookCommunications::NetworkThreadRT, this);
+	NetThread = std::make_unique<std::thread>(&HookCommunications::NetworkThreadRt, this);
 }
 
 HookCommunications::~HookCommunications()
@@ -21,7 +20,7 @@ HookCommunications::~HookCommunications()
 	closesocket(ServerSocket);
 	WSACleanup();
 
-	if(netThread->joinable()) netThread->join();
+	if(NetThread->joinable()) NetThread->join();
 }
 
 [[nodiscard]]
@@ -30,7 +29,6 @@ bool HookCommunications::CreateSocketAndBind()
 	// Windows Socket returns 0 on success...
 	if (!WSAStartup(MAKEWORD(2, 2), &wsaData))
 	{
-		this->Event << LOGERR("WSAStartup Failed.") << std::endl;
 		return false;
 	}
 
@@ -42,19 +40,17 @@ bool HookCommunications::CreateSocketAndBind()
 	hints.ai_flags = AI_PASSIVE;
 
 	// Get Local addr
-	auto err = getaddrinfo(nullptr, wsaPort.c_str(), &hints, &res);
+	auto err = getaddrinfo(nullptr, WsaPort.c_str(), &hints, &res);
 	if (err)
 	{
-		Event << LOGERR("Unable to get address info.") << std::endl;
 		WSACleanup();
 		return false;
 	}
 
-	SOCKET ServerSocket = INVALID_SOCKET;
+	
 	ServerSocket = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 	if (ServerSocket == INVALID_SOCKET) 
 	{
-		Event << LOGERR("Error with Socket ") << WSAGetLastError() << std::endl;
 		freeaddrinfo(res);
 		WSACleanup();
 		return false;
@@ -63,7 +59,6 @@ bool HookCommunications::CreateSocketAndBind()
 	err = bind(ServerSocket, res->ai_addr, int(res->ai_addrlen));
 	if(err == SOCKET_ERROR)
 	{
-		Event << LOGERR("Unable to bind") << std::endl;
 		freeaddrinfo(res);
 		closesocket(ServerSocket);
 		WSACleanup();
@@ -81,10 +76,18 @@ void HookCommunications::Signal_EndFrame()
 	// Signal the network thread. It's able to send now.
 }
 
-void HookCommunications::NetworkThreadRT()
+void HookCommunications::NetworkThreadRt()
 {
 	// Network Thread Logic
 	// This loops infinitely until we recieve a kill from the host
+}
+
+[[nodiscard]]
+FQueueMessage HookCommunications::ThreadRt_GetNextMessage()
+{
+	FQueueMessage dummy;
+	dummy.type = EQueueMessageType::NetThreadStop;
+	return dummy;
 }
 
 //////////////////////////////////////////////////

@@ -137,12 +137,14 @@
     <ClCompile Include="Source\d3d11DeviceContext.cpp" />
     <ClCompile Include="Source\d3d11Functions.cpp" />
     <ClCompile Include="Source\d3d11Wrapper.cpp" />
+    <ClCompile Include="Source\hookComms.cpp" />
     <ClCompile Include="Source\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\d3d11Device.h" />
     <ClInclude Include="Header\d3d11DeviceContext.h" />
     <ClInclude Include="Header\d3d11Wrapper.h" />
+    <ClInclude Include="Header\hookComms.h" />
     <ClInclude Include="Header\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

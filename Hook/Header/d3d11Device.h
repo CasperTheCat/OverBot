@@ -1,4 +1,5 @@
 #pragma once
+#include "hookComms.h"
 #include <d3d11.h>
 #include <d3d11_1.h>
 #include <d3d11_2.h>
@@ -7,11 +8,12 @@
 #include <d3d11on12.h>
 #include <fstream>
 
+
 class D3D11CustomDevice : public ID3D11Device
 {
 protected:
 	ID3D11Device *m_d3dDevice;
-	HookCommunications *m_net
+	HookCommunications *m_net;
 
 
 public:

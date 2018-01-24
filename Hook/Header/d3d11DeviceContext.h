@@ -1,4 +1,5 @@
 #pragma once
+#include "hookComms.h"
 #include <d3d11.h>
 #include <d3d11_1.h>
 #include <d3d11_2.h>
@@ -7,6 +8,7 @@
 #include <d3d11on12.h>
 #include <fstream>
 
+
 class D3D11CustomContext : public ID3D11DeviceContext
 {
 protected:
@@ -14,8 +16,8 @@ protected:
 	HookCommunications *m_net;
 
 public:
-	D3D11CustomContext(HookCommunications *net, ID3D11DeviceContext *dev, ID3D11DeviceContext ***ret);
-	D3D11CustomContext(HookCommunications *net, ID3D11DeviceContext *dev);
+	D3D11CustomContext(HookCommunications *net, ID3D11DeviceContext *devCon, ID3D11DeviceContext ***ret);
+	D3D11CustomContext(HookCommunications *net, ID3D11DeviceContext *devCon);
 
 
 	void STDMETHODCALLTYPE VSSetConstantBuffers(

@@ -1,10 +1,5 @@
 #pragma once
-
-// Socks
-#include <WinSock2.h> // Baremetal Sockets
-#include <ws2tcpip.h> // TCPIP Header
-#pragma comment(lib, "Ws2_32.lib")
-
+#include "hookComms.h"
 #include <d3d11.h>
 #include <d3d11_1.h>
 #include <d3d11_2.h>

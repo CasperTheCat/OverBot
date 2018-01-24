@@ -17,7 +17,7 @@ D3D11CustomDevice::D3D11CustomDevice(HookCommunications *net, ID3D11Device* dev)
 HRESULT D3D11CustomDevice::CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData, ID3D11Buffer** ppBuffer)
 {
 	// Erroneous Call TODO CHANGE THIS
-	m_net->NotifyDamageBoost();
+	m_net->Notify_DamageBoost();
 
 
 	return m_d3dDevice->CreateBuffer(pDesc, pInitialData, ppBuffer);

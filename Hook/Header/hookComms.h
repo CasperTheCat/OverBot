@@ -3,6 +3,8 @@
 // Socks
 #include <WinSock2.h> // Baremetal Sockets
 #include <ws2tcpip.h> // TCPIP Header
+#include <queue>
+#include <mutex>
 #pragma comment(lib, "Ws2_32.lib")
 
 enum class EQueueMessageType : uint8_t
@@ -27,12 +29,13 @@ struct FQueueMessage
 class HookCommunications
 {
 protected:
-	std::string wsaPort;
-    std::queue<FQueueMessage> netThreadMessageQueue;
+	std::string WsaPort;
+    std::queue<FQueueMessage> NetThreadMessageQueue;
     std::mutex netMutex;
-    std::unique_ptr<std::thread> netThread;
+    std::unique_ptr<std::thread> NetThread;
 	// Server Up?
 	bool bIsBound;
+	SOCKET ServerSocket;
 
 public:
 	/**
@@ -67,7 +70,7 @@ private:
     /**
      * Network Thread Runtime 
      */
-    void NetworkThreadRT();
+    void NetworkThreadRt();
 
 //////////////////////////////////////////////////
 // Thread Only Functions
@@ -77,7 +80,7 @@ private:
      * QueuePop
      */
     [[nodiscard]]
-    FQueueMessage ThreadRT_GetNextMessage();
+    FQueueMessage ThreadRt_GetNextMessage();
 
 
 //////////////////////////////////////////////////
