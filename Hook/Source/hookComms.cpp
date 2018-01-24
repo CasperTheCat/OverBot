@@ -73,10 +73,67 @@ bool HookCommunications::CreateSocketAndBind()
 }
 
 //////////////////////////////////////////////////
-// Notifiers
+// Notifiers - Supports
 //
-
+    /**
+     * Notify of any source of damage boost
+     */
 void HookCommunications::Notify_DamageBoost()
 {
-    // NOTHING
+
+}
+
+    /**
+     * Notify of incoming healing
+     */
+void HookCommunications::Notify_Healing()
+{
+
+}
+
+    /**
+     * Notify of the inability to be healed
+     */
+void HookCommunications::Notify_AntiHealing()
+{
+
+}
+
+
+//////////////////////////////////////////////////
+// Notifiers - Damage
+//
+    /**
+     * Notify that we hit something
+     */
+void HookCommunications::Notify_DamageDealt()
+{
+
+}
+
+    /**
+     * Notify that we took damage
+     */
+void HookCommunications::Notify_DamageTaken()
+{
+
+}
+
+//////////////////////////////////////////////////
+// Notifiers - Health
+//
+    /**
+     * Notify that we hit critical HP
+     */
+void HookCommunications::Notify_HealthCritical()
+{
+
+}
+
+    /**
+     * Notify that our health changed 
+     */
+void HookCommunications::Notify_HealthChanged(int newHealth)
+{
+
 }

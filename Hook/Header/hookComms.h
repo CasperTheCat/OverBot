@@ -34,8 +34,56 @@ public:
 	[[nodiscard]]
 	bool CreateSocketAndBind();
 
+
+//////////////////////////////////////////////////
+// Notifiers - Supports
+//
+public:
     /**
-     * Send Notify to the publisher
+     * Notify of any source of damage boost
      */
     void Notify_DamageBoost();
+
+    /**
+     * Notify of incoming healing
+     */
+    void Notify_Healing();
+
+    /**
+     * Notify of the inability to be healed
+     */
+    void Notify_AntiHealing();
+
+
+//////////////////////////////////////////////////
+// Notifiers - Damage
+//
+public:
+    /**
+     * Notify that we hit something
+     */
+    void Notify_DamageDealt();
+
+    /**
+     * Notify that we took damage
+     */
+    void Notify_DamageTaken();
+
+//////////////////////////////////////////////////
+// Notifiers - Health
+//
+public:
+    /**
+     * Notify that we hit critical HP
+     */
+    void Notify_HealthCritical();
+
+    /**
+     * Notify that our health changed 
+     */
+    void Notify_HealthChanged(int newHealth);
+
+    
+
+    
 };
