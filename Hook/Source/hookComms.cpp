@@ -5,11 +5,12 @@
 //#include <ws2def.h>
 
 HookCommunications::HookCommunications() :
-    WsaPort("8008"),
-    bIsBound(false)
+	WsaPort("8008"),
+	bIsBound(false), 
+	bCanPushQueue(false),
+	ServerSocket(INVALID_SOCKET),
+	ClientSocket(INVALID_SOCKET)
 {
-	// Launch Thread
-	NetThread = std::make_unique<std::thread>(&HookCommunications::NetworkThreadRt, this);
 }
 
 HookCommunications::~HookCommunications()
@@ -17,8 +18,11 @@ HookCommunications::~HookCommunications()
     // Delete open connections
 
     // Delete the socket
-	closesocket(ServerSocket);
-	WSACleanup();
+	if (bIsBound)
+	{
+		closesocket(ServerSocket);
+		WSACleanup();
+	}
 
 	if(NetThread->joinable()) NetThread->join();
 }
@@ -26,6 +30,8 @@ HookCommunications::~HookCommunications()
 [[nodiscard]]
 bool HookCommunications::CreateSocketAndBind()
 {
+	if (bIsBound) return true;
+
 	// Windows Socket returns 0 on success...
 	if (!WSAStartup(MAKEWORD(2, 2), &wsaData))
 	{
@@ -65,6 +71,9 @@ bool HookCommunications::CreateSocketAndBind()
 		return false;
 	}
 
+	// Launch Thread
+	NetThread = std::make_unique<std::thread>(&HookCommunications::NetworkThreadRt, this);
+
 	bIsBound = true;
     freeaddrinfo(res);
 	return true;
@@ -80,14 +89,121 @@ void HookCommunications::NetworkThreadRt()
 {
 	// Network Thread Logic
 	// This loops infinitely until we recieve a kill from the host
+
+	if (listen(ServerSocket, SOMAXCONN) == SOCKET_ERROR) {
+		return; // Exit
+	}
+
+	// Wait for connection
+	ClientSocket = accept(ServerSocket, nullptr, nullptr);
+
+	if(ClientSocket == INVALID_SOCKET)
+	{
+		return; // Returning here does not take the DLL out
+	}
+
+	// We have a client. We can allow writes to the queue now
+	{
+		std::lock_guard<std::mutex> lock(netMutex);
+		bCanPushQueue = true;
+	}
+
+	// ReSharper disable once CppJoinDeclarationAndAssignment
+	EQueueMessageType MsgType;
+	bool ThreadRun = true;
+
+	while(ThreadRun)
+	{
+		//
+		MsgType = ThreadRt_BlockForNextMessage();
+
+		switch(MsgType)
+		{
+		case EQueueMessageType::NetThreadStart: break;
+		case EQueueMessageType::NetThreadStop: 
+			ThreadRun = false;
+			break;
+		case EQueueMessageType::Signal_EndFrame: break;
+		case EQueueMessageType::Notify_DamageBoost: break;
+		case EQueueMessageType::Notify_Healing: break;
+		case EQueueMessageType::Notify_AntiHealing: break;
+		case EQueueMessageType::TOTAL_MESSAGE_TYPES: break;
+		default: ;
+		}
+	}
 }
 
 [[nodiscard]]
-FQueueMessage HookCommunications::ThreadRt_GetNextMessage()
+EQueueMessageType HookCommunications::ThreadRt_GetNextMessage()
 {
-	FQueueMessage dummy;
-	dummy.type = EQueueMessageType::NetThreadStop;
-	return dummy;
+	// Lock
+	std::lock_guard<std::mutex> lock(netMutex);
+	const auto t = NetThreadMessageQueue.front();
+	NetThreadMessageQueue.pop();
+	return t;
+}
+
+bool HookCommunications::ThreadRt_IsQueueEmpty()
+{
+	return true;
+}
+
+EQueueMessageType HookCommunications::ThreadRt_BlockForNextMessage()
+{
+	EQueueMessageType retMessage;
+	while(true)
+	{
+		// Lock
+		std::unique_lock<std::mutex> lock(netMutex);
+
+		if (NetThreadMessageQueue.empty())
+		{
+			// Unlock here
+			lock.unlock();
+			Sleep(50); // We can be nice and not spam. If the queue is not empty
+					   // we will run at max speed anyway
+			continue;
+		}
+
+		// First element
+		retMessage = NetThreadMessageQueue.front();
+
+		// Remove last element
+		NetThreadMessageQueue.pop();
+
+		break;
+	}
+
+	return retMessage;
+}
+
+void HookCommunications::ThreadRt_TransmitToClient(EQueueMessageType Message)
+{
+	// We transmit to client here
+	std::string txString;
+	switch (Message)
+	{
+		case EQueueMessageType::NetThreadStart: break;
+		case EQueueMessageType::NetThreadStop: break;
+		case EQueueMessageType::Signal_EndFrame: break;
+		case EQueueMessageType::Notify_DamageBoost:
+			txString = "SGNL_DmgBst";
+			break;
+		case EQueueMessageType::Notify_Healing: break;
+		case EQueueMessageType::Notify_AntiHealing: break;
+		case EQueueMessageType::TOTAL_MESSAGE_TYPES: break;
+		default: ;
+	}
+
+	// TX
+	send(ClientSocket, txString.c_str(), strlen(txString.c_str()), 0);
+}
+
+void HookCommunications::MainRt_PushMessage(const EQueueMessageType Message)
+{
+	// Lock
+	std::lock_guard<std::mutex> lock(netMutex);
+	if(bCanPushQueue) NetThreadMessageQueue.push(Message);
 }
 
 //////////////////////////////////////////////////
@@ -98,7 +214,8 @@ FQueueMessage HookCommunications::ThreadRt_GetNextMessage()
      */
 void HookCommunications::Notify_DamageBoost()
 {
-
+	
+	MainRt_PushMessage(EQueueMessageType::Notify_DamageBoost);
 }
 
     /**

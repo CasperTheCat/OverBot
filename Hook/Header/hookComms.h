@@ -30,12 +30,14 @@ class HookCommunications
 {
 protected:
 	std::string WsaPort;
-    std::queue<FQueueMessage> NetThreadMessageQueue;
+    std::queue<EQueueMessageType> NetThreadMessageQueue;
     std::mutex netMutex;
     std::unique_ptr<std::thread> NetThread;
 	// Server Up?
 	bool bIsBound;
+	bool bCanPushQueue;
 	SOCKET ServerSocket;
+	SOCKET ClientSocket;
 
 public:
 	/**
@@ -80,7 +82,33 @@ private:
      * QueuePop
      */
     [[nodiscard]]
-    FQueueMessage ThreadRt_GetNextMessage();
+    EQueueMessageType ThreadRt_GetNextMessage();
+
+	/**
+	 * Queue Empty
+	 */
+	[[nodiscard]]
+	bool ThreadRt_IsQueueEmpty();
+
+	/**
+	 * Block for next Message
+	 */
+	[[nodiscard]]
+	EQueueMessageType ThreadRt_BlockForNextMessage();
+
+	/**
+	 * Send Notify over the network
+	 */
+	void ThreadRt_TransmitToClient(EQueueMessageType Message);
+
+//////////////////////////////////////////////////
+// Main Only Functions
+//
+private:
+	/**
+	 * Push to Queue
+	 */
+	void MainRt_PushMessage(EQueueMessageType Message);
 
 
 //////////////////////////////////////////////////
