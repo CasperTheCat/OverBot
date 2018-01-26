@@ -20,7 +20,8 @@ HookCommunications::~HookCommunications()
     // Delete the socket
 	if (bIsBound)
 	{
-		closesocket(ServerSocket);
+		const auto stat = shutdown(ServerSocket, SD_BOTH);
+		if(WAS_SUCCESS(stat)) closesocket(ServerSocket);
 		WSACleanup();
 	}
 
