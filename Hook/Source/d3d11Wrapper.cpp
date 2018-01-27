@@ -31,11 +31,18 @@ D3D11Wrapper::~D3D11Wrapper()
 
 
 [[nodiscard]]
-bool D3D11Wrapper::CreateSocketAndBind()
+int D3D11Wrapper::CreateSocketAndBind()
 {
-	if(!hComms) hComms = new HookCommunications();
+	if (!hComms) return EXIT_FAILURE;
+	//if (!hComms) hComms = new HookCommunications();
 
 	return hComms->CreateSocketAndBind();
+}
+
+void D3D11Wrapper::RegisterNetwork(HookCommunications *hCom)
+{
+	hComms = hCom;
+	//hComms->CleanAndReset();
 }
 
 bool D3D11Wrapper::LoadDLL()

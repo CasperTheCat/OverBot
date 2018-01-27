@@ -5,26 +5,11 @@
 #include <ws2tcpip.h> // TCPIP Header
 #include <queue>
 #include <mutex>
+#include <fstream>
+#include "../../Shared/shared.h"
 #pragma comment(lib, "Ws2_32.lib")
 
-enum class EQueueMessageType : uint8_t
-{
-    NetThreadStart,
-    NetThreadStop,
-    Signal_EndFrame,
 
-// Supports
-    Notify_DamageBoost,
-    Notify_Healing,
-    Notify_AntiHealing,
-
-    TOTAL_MESSAGE_TYPES // This better not be above 255
-};
-
-struct FQueueMessage
-{
-    EQueueMessageType type;
-};
 
 class HookCommunications
 {
@@ -38,6 +23,8 @@ protected:
 	bool bCanPushQueue;
 	SOCKET ServerSocket;
 	SOCKET ClientSocket;
+	std::ofstream Event;
+	bool ThreadKill;
 
 public:
 	/**
@@ -58,7 +45,12 @@ public:
 	 * Create Socket and Bind (NO DISCARD)
 	 */
 	[[nodiscard]]
-	bool CreateSocketAndBind();
+	int CreateSocketAndBind();
+
+	/**
+	 * Cleanup and reset
+	 */
+	void CleanAndReset();
 
     /**
      * Signal EndFrame 

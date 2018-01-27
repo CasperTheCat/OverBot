@@ -35,7 +35,12 @@ public:
 	 * Create Socket and Bind (NO DISCARD)
 	 */
 	[[nodiscard]]
-	bool CreateSocketAndBind();
+	int CreateSocketAndBind();
+
+	/**
+	*
+	*/
+	void RegisterNetwork(HookCommunications *hCom);
 
 	/// Public functions
 	bool LoadDLL();

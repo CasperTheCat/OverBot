@@ -1,6 +1,8 @@
 // Socks
 #pragma once
 #include "../Header/utils.h"
+#include "../../Shared/shared.h"
+
 #ifdef _WIN32
 #include <WinSock2.h> // Baremetal Sockets
 #include <ws2tcpip.h> // TCPIP Header
@@ -18,25 +20,6 @@ typedef SOCKET crySocket;
 typedef int crySocket;
 #define INVALID_SOCKET -1
 #endif
-
-enum class EQueueMessageType : uint8_t
-{
-    NetThreadStart,
-    NetThreadStop,
-    Signal_EndFrame,
-
-// Supports
-    Notify_DamageBoost,
-    Notify_Healing,
-    Notify_AntiHealing,
-
-    TOTAL_MESSAGE_TYPES // This better not be above 255
-};
-
-struct FQueueMessage
-{
-    EQueueMessageType type;
-};
 
 class FrameCommunications
 {
@@ -64,6 +47,11 @@ public:
      */
     [[nodiscard]]
     int ConnectToHost(std::string ip);
+
+	/**
+	 * Block for out
+	 */
+	void Run();
 
 //////////////////////////////////////////////////
 // Thread Runtimes
