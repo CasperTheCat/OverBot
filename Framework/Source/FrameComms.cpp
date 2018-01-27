@@ -3,8 +3,8 @@
 
 
 FrameCommunications::FrameCommunications()
-	: WsaPort("8008"),
-	IsBound(false),
+	: IsBound(false),
+	ServingPort("8008"),
 	ConnectSocket(INVALID_SOCKET)
 	
 {
@@ -39,7 +39,7 @@ int FrameCommunications::ConnectToHost(std::string ip)
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
 
-	auto err = getaddrinfo(ip.c_str(), WsaPort.c_str(), &hints, &res);
+	auto err = getaddrinfo(ip.c_str(), ServingPort.c_str(), &hints, &res);
 	if(WAS_FAILURE(err))
 	{
 		std::cout << "Error addr" << std::endl;
